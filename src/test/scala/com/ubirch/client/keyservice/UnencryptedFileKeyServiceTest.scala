@@ -36,4 +36,17 @@ class UnencryptedFileKeyServiceTest extends FlatSpec with Matchers {
 
     Files.delete(f)
   }
+
+  it should "always return the same private key for a given uuid" in {
+    val f = Files.createTempFile("keys", ".tmp.csv")
+
+    val ks = new UnencryptedFileKeyService(f)
+    val k1 = ks.getPrivateKey(UUID.fromString("8e78b5ca-6597-11e8-8185-c83ea7000e4d")).get
+    val k2 = ks.getPrivateKey(UUID.fromString("8e78b5ca-6597-11e8-8185-c83ea7000e4d")).get
+
+    k1.getRawPrivateKey should equal (k2.getRawPrivateKey)
+    k1.getPrivateKey.getAlgorithm should equal (k2.getPrivateKey.getAlgorithm)
+
+    Files.delete(f)
+  }
 }
