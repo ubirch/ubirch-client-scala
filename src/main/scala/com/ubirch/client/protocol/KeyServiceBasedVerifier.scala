@@ -1,13 +1,11 @@
 package com.ubirch.client.protocol
 
 import java.security.{MessageDigest, NoSuchAlgorithmException, SignatureException}
-import java.util.{Base64, UUID}
+import java.util.UUID
 
 import com.typesafe.scalalogging.StrictLogging
 import com.ubirch.client.keyservice.KeyService
 import com.ubirch.client.util._
-import com.ubirch.crypto.GeneratorKeyFactory
-import com.ubirch.crypto.utils.Curve
 import com.ubirch.protocol.ProtocolVerifier
 
 class KeyServiceBasedVerifier(keyService: KeyService) extends ProtocolVerifier with StrictLogging {
@@ -18,8 +16,7 @@ class KeyServiceBasedVerifier(keyService: KeyService) extends ProtocolVerifier w
 
     keyService.getPublicKeys(uuid).headOption match {
       case Some(key) =>
-        val pubKeyBytes = Base64.getDecoder.decode(key.pubKeyInfo.pubKey)
-        key.pubKeyInfo.algorithm match {
+        key.getPublicKey.getAlgorithm match {
           case "ECC_ED25519" | "Ed25519" =>
             // Ed25519 uses SHA512 hashed messages
             val digest: MessageDigest = MessageDigest.getInstance("SHA-512")
@@ -27,12 +24,12 @@ class KeyServiceBasedVerifier(keyService: KeyService) extends ProtocolVerifier w
             val dataToVerify = digest.digest
 
             logger.debug(s"verifying ED25519: ${hexEncode(dataToVerify)}")
-            GeneratorKeyFactory.getPubKey(pubKeyBytes, Curve.Ed25519).verify(dataToVerify, signature)
+            key.verify(dataToVerify, signature)
           case "ECC_ECDSA" | "ecdsa-p256v1" | "ECDSA" =>
             val dataToVerify = data.slice(offset, offset + len)
 
             logger.debug(s"verifying ECDSA: ${hexEncode(dataToVerify)}")
-            GeneratorKeyFactory.getPubKey(pubKeyBytes, Curve.PRIME256V1).verify(dataToVerify, signature)
+            key.verify(dataToVerify, signature)
           case algorithm: String =>
             throw new NoSuchAlgorithmException(s"unsupported algorithm: $algorithm")
         }
