@@ -2,6 +2,7 @@ package com.ubirch.client.keyservice
 
 import java.util.{Base64, UUID}
 
+import com.typesafe.scalalogging.StrictLogging
 import com.ubirch.client.keyservice.UbirchKeyService._
 import org.json4s.DefaultFormats
 import skinny.http.HTTP
@@ -11,12 +12,15 @@ import com.ubirch.crypto.{GeneratorKeyFactory, PubKey}
 
 import scala.util.Try
 
-class UbirchKeyService(keyServiceUrl: String) extends PublicKeyProvider {
+class UbirchKeyService(keyServiceUrl: String) extends PublicKeyProvider with StrictLogging {
   implicit private val formats: DefaultFormats = DefaultFormats
 
   override def getPublicKey(uuid: UUID): Option[PubKey] = {
-    val response = HTTP.get(keyServiceUrl + "/api/keyService/v1/pubkey/current/hardwareId/" + uuid.toString)
-    Try(parse(response.asString).extract[List[PublicKey]]).getOrElse(List())
+    val url = keyServiceUrl + "/api/keyService/v1/pubkey/current/hardwareId/" + uuid.toString
+    logger.debug(s"Making HTTP Get request to [$url]")
+    val response = HTTP.get(url).asString
+    logger.debug(s"response: [$response]")
+    Try(parse(response).extract[List[PublicKey]]).getOrElse(List())
       .map { case PublicKey(PublicKeyInfo(pubKey, algorithm)) =>
         val curve = curveFromString(algorithm)
         val bytes = Base64.getDecoder.decode(pubKey)
