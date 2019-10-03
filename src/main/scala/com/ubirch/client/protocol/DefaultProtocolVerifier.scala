@@ -12,7 +12,7 @@ import com.ubirch.protocol.ProtocolVerifier
 class DefaultProtocolVerifier(keyService: PublicKeyProvider) extends ProtocolVerifier with StrictLogging {
   override def verify(uuid: UUID, data: Array[Byte], offset: Int, len: Int, signature: Array[Byte]): Boolean = {
     if (signature == null) throw new SignatureException("signature must not be null")
-    logger.debug(s"DATA: d=${hexEncode(data)}")
+    logger.debug(s"DATA: d=${hexEncode(data)} offset=$offset len=$len")
     logger.debug(s"SIGN: s=${hexEncode(signature)}")
 
     val keys = keyService.getPublicKey(uuid)
@@ -29,13 +29,15 @@ class DefaultProtocolVerifier(keyService: PublicKeyProvider) extends ProtocolVer
           digest.update(data, offset, len)
           val dataToVerify = digest.digest
 
-          logger.debug(s"verifying ED25519: ${hexEncode(dataToVerify)}")
-          key.verify(dataToVerify, signature)
+          val ok = key.verify(dataToVerify, signature)
+          logger.debug(s"verifying ED25519: $ok ${hexEncode(dataToVerify)}")
+          ok
         case "ECC_ECDSA" | "ecdsa-p256v1" | "ECDSA" =>
           val dataToVerify = data.slice(offset, offset + len)
 
-          logger.debug(s"verifying ECDSA: ${hexEncode(dataToVerify)}")
-          key.verify(dataToVerify, signature)
+          val ok = key.verify(dataToVerify, signature)
+          logger.debug(s"verifying ECDSA: $ok ${hexEncode(dataToVerify)}")
+          ok
         case algorithm: String =>
           logger.warn(s"$uuid has key with unsupported algorithm: $algorithm")
           false
