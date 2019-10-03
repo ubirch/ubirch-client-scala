@@ -11,11 +11,11 @@ import com.ubirch.crypto.{GeneratorKeyFactory, PrivKey, PubKey}
 import scala.collection.JavaConverters._
 
 class UnencryptedFileKeyProvider(file: Path) extends PublicKeyProvider {
-  override def getPublicKey(deviceUuid: UUID): Option[PubKey] = {
+  override def getPublicKey(deviceUuid: UUID): List[PubKey] = {
     Files.readAllLines(file).iterator().asScala.map { line =>
       val Array(uuidString, algorithm, pubKeyBytesHex, _) = line.split(',')
       UUID.fromString(uuidString) -> GeneratorKeyFactory.getPubKey(pubKeyBytesHex, curveFromString(algorithm))
-    }.collectFirst { case (uuid, pubKey) if uuid == deviceUuid => pubKey }
+    }.collect { case (uuid, pubKey) if uuid == deviceUuid => pubKey }.toList
   }
 
   def getPrivateKey(deviceUuid: UUID): Option[PrivKey] = {

@@ -15,7 +15,7 @@ import scala.util.Try
 class UbirchKeyService(keyServiceUrl: String) extends PublicKeyProvider with StrictLogging {
   implicit private val formats: DefaultFormats = DefaultFormats
 
-  override def getPublicKey(uuid: UUID): Option[PubKey] = {
+  override def getPublicKey(uuid: UUID): List[PubKey] = {
     val url = keyServiceUrl + "/api/keyService/v1/pubkey/current/hardwareId/" + uuid.toString
     logger.debug(s"Making HTTP Get request to [$url]")
     val response = HTTP.get(url).asString
@@ -25,7 +25,7 @@ class UbirchKeyService(keyServiceUrl: String) extends PublicKeyProvider with Str
         val curve = curveFromString(algorithm)
         val bytes = Base64.getDecoder.decode(pubKey)
         GeneratorKeyFactory.getPubKey(bytes, curve)
-      }.headOption
+      }
   }
 }
 
@@ -34,7 +34,7 @@ object UbirchKeyService {
   case class PublicKey(pubKeyInfo: PublicKeyInfo)
 
   case class PublicKeyInfo(
-    /** base64 encoded */
+    // base64 encoded
     pubKey: String,
     algorithm: String
   )

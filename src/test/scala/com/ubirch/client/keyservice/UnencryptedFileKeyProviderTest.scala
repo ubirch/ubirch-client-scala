@@ -10,7 +10,7 @@ class UnencryptedFileKeyProviderTest extends FlatSpec with Matchers {
     val f = Files.createTempFile("keys", ".tmp.csv")
 
     val ks = new UnencryptedFileKeyProvider(f)
-    ks.getPublicKey(UUID.fromString("8e78b5ca-6597-11e8-8185-c83ea7000e4d")) should equal (None)
+    ks.getPublicKey(UUID.fromString("8e78b5ca-6597-11e8-8185-c83ea7000e4d")).isEmpty should be (true)
 
     Files.delete(f)
   }
@@ -21,7 +21,7 @@ class UnencryptedFileKeyProviderTest extends FlatSpec with Matchers {
     val ks = new UnencryptedFileKeyProvider(f)
     ks.getPrivateKey(UUID.fromString("8e78b5ca-6597-11e8-8185-c83ea7000e4d"))
 
-    ks.getPublicKey(UUID.fromString("8e78b5ca-6597-11e8-8185-c83ea7000e4d")).isDefined should be (true)
+    ks.getPublicKey(UUID.fromString("8e78b5ca-6597-11e8-8185-c83ea7000e4d")).nonEmpty should be (true)
 
     Files.delete(f)
   }
@@ -32,7 +32,7 @@ class UnencryptedFileKeyProviderTest extends FlatSpec with Matchers {
     val ks = new UnencryptedFileKeyProvider(f)
     ks.getPrivateKey(UUID.fromString("deadbeef-dead-beef-dead-beefdeadbeef"))
 
-    ks.getPublicKey(UUID.fromString("8e78b5ca-6597-11e8-8185-c83ea7000e4d")) should equal (None)
+    ks.getPublicKey(UUID.fromString("8e78b5ca-6597-11e8-8185-c83ea7000e4d")).isEmpty should be (true)
 
     Files.delete(f)
   }

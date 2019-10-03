@@ -6,5 +6,5 @@ import com.ubirch.crypto.PubKey
 
 
 trait PublicKeyProvider {
-  def getPublicKey(uuid: UUID): Option[PubKey]
+  def getPublicKey(uuid: UUID): List[PubKey]
 }
