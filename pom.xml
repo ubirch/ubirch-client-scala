@@ -12,6 +12,14 @@
     <description>library for creating ubirch protocol clients in scala</description>
     <url>https://ubirch.com/</url>
 
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
     <organization>
         <name>ubirch GmbH</name>
         <url>https://ubirch.com/</url>
@@ -62,7 +70,7 @@
         <!-- Scala -->
         <scala-maven-plugin.version>3.4.2</scala-maven-plugin.version>
         <scala.major.version>2.12</scala.major.version>
-        <scala.minor.version>.6</scala.minor.version>
+        <scala.minor.version>.8</scala.minor.version>
         <scala.version>${scala.major.version}${scala.minor.version}</scala.version>
 
         <!-- Logging -->
