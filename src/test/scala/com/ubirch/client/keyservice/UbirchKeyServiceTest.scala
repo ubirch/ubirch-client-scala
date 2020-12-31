@@ -2,9 +2,10 @@ package com.ubirch.client.keyservice
 
 import java.util.UUID
 
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
-class UbirchKeyServiceTest extends FlatSpec with Matchers {
+class UbirchKeyServiceTest extends AnyFlatSpec with Matchers {
   "HttpKeyService" should "fetch and properly deserialize public keys" ignore {
     // NOTE: port forward this address when running this test
     val ks = new UbirchKeyService("http://localhost:8095")
