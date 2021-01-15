@@ -9,6 +9,8 @@ import com.ubirch.client.util._
 import com.ubirch.crypto.PubKey
 import com.ubirch.protocol.ProtocolVerifier
 
+import scala.util.Try
+
 class MultiKeyProtocolVerifier(keyService: PublicKeyProvider) extends ProtocolVerifier with StrictLogging {
 
   def verifySingle(uuid: UUID, data: Array[Byte], offset: Int, len: Int, signature: Array[Byte],
@@ -26,7 +28,13 @@ class MultiKeyProtocolVerifier(keyService: PublicKeyProvider) extends ProtocolVe
       case "ECC_ECDSA" | "ecdsa-p256v1" | "ECDSA" =>
         val dataToVerify = data.slice(offset, offset + len)
 
-        val ok = key.verify(dataToVerify, signature)
+        val ok = Try(key.verify(dataToVerify, signature))
+          .recover {
+            case e: SignatureException =>
+              logger.debug("Trying with Signature PlainEncoding", e)
+              key.setSignatureAlgorithm("SHA256WITHPLAIN-ECDSA")
+              key.verify(dataToVerify, signature)
+          }.get
         logger.debug(s"verifying ECDSA: $ok ${hexEncode(dataToVerify)}")
         ok
       case algorithm: String =>
