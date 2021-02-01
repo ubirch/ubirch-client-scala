@@ -214,7 +214,7 @@
                         <arg>-Ywarn-unused:params</arg>              <!--  Warn if a value parameter is unused. -->
                         <arg>-Ywarn-unused:patvars</arg>             <!--  Warn if a variable bound in a pattern is unused. -->
                         <arg>-Ywarn-unused:privates</arg>            <!--  Warn if a private member is unused. -->
-                        <arg>-Ywarn-value-discard</arg>
+                        <arg>-Ywarn-value-discard</arg>              <!--  Warn when non-Unit expression results are unused. -->
                     </args>
                 </configuration>
             </plugin>
