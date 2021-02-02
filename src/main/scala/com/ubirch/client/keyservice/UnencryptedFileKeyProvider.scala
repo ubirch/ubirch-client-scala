@@ -7,6 +7,7 @@ import java.util.UUID
 import com.ubirch.client.util._
 import com.ubirch.crypto.utils.Curve
 import com.ubirch.crypto.{GeneratorKeyFactory, PrivKey, PubKey}
+import org.apache.commons.codec.binary.Hex
 
 import scala.collection.JavaConverters._
 
@@ -29,7 +30,7 @@ class UnencryptedFileKeyProvider(file: Path) extends PublicKeyProvider {
       case None =>
         val k = GeneratorKeyFactory.getPrivKey(Curve.PRIME256V1)
 
-        val keyLineToSave = s"$deviceUuid,ECDSA,${k.getRawPublicKey},${k.getRawPrivateKey}\n"
+        val keyLineToSave = s"$deviceUuid,ECDSA,${Hex.encodeHexString(k.getRawPublicKey)},${Hex.encodeHexString(k.getRawPrivateKey)}\n"
           .getBytes(StandardCharsets.UTF_8)
         Files.write(file, keyLineToSave, StandardOpenOption.CREATE, StandardOpenOption.APPEND)
 
