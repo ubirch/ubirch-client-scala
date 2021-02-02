@@ -31,7 +31,7 @@ class MultiKeyProtocolVerifier(keyService: PublicKeyProvider) extends ProtocolVe
         val ok = Try(key.verify(dataToVerify, signature))
           .recover {
             case e: SignatureException =>
-              logger.debug("Trying with Signature PlainEncoding", e)
+              logger.debug("Trying with Signature PlainEncoding", e.getMessage)
               key.setSignatureAlgorithm("SHA256WITHPLAIN-ECDSA")
               key.verify(dataToVerify, signature)
           }.get
