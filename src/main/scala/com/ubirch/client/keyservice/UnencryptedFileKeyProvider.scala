@@ -14,7 +14,6 @@ import scala.jdk.CollectionConverters._
 class UnencryptedFileKeyProvider(file: Path) extends PublicKeyProvider {
   override def getPublicKey(deviceUuid: UUID): List[PubKey] = {
     Files.readAllLines(file).iterator().asScala.map { line =>
-      println(line)
       val Array(uuidString, algorithm, pubKeyBytesHex, _) = line.split(',')
       UUID.fromString(uuidString) -> GeneratorKeyFactory.getPubKey(pubKeyBytesHex, curveFromString(algorithm))
     }.collect { case (uuid, pubKey) if uuid == deviceUuid => pubKey }.toList
