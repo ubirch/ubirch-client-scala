@@ -6,7 +6,7 @@
 
     <groupId>com.ubirch</groupId>
     <artifactId>ubirch-client-scala</artifactId>
-    <version>1.1-SNAPSHOT</version>
+    <version>1.1.1-SNAPSHOT</version>
 
     <name>ubirch-client-scala [${project.version}]</name>
     <description>library for creating ubirch protocol clients in scala</description>
@@ -33,15 +33,16 @@
         <tag>HEAD</tag>
     </scm>
 
+
     <distributionManagement>
-        <snapshotRepository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-        </snapshotRepository>
         <repository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+            <id>gitlab-maven</id>
+            <url>https://gitlab.com/api/v4/projects/37429227/packages/maven</url>
         </repository>
+        <snapshotRepository>
+            <id>gitlab-maven</id>
+            <url>https://gitlab.com/api/v4/projects/37429227/packages/maven</url>
+        </snapshotRepository>
     </distributionManagement>
 
     <properties>
@@ -79,6 +80,8 @@
         <!-- additional libraries -->
         <json4s-jackson.version>3.6.3</json4s-jackson.version>
         <skinny-framework.version>3.0.1</skinny-framework.version>
+        <maven-checkstyle-plugin.version>3.1.2</maven-checkstyle-plugin.version>
+        <checkstyle.version>10.3.1</checkstyle.version>
     </properties>
 
     <dependencies>
@@ -294,7 +297,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>3.0.0</version>
+                <version>${maven-checkstyle-plugin.version}</version>
                 <executions>
                     <execution>
                         <id>verify-style</id>
@@ -323,7 +326,7 @@
                     <dependency>
                         <groupId>com.puppycrawl.tools</groupId>
                         <artifactId>checkstyle</artifactId>
-                        <version>8.22</version>
+                        <version>${checkstyle.version}</version>
                     </dependency>
                 </dependencies>
             </plugin>
