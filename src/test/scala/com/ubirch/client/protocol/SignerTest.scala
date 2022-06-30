@@ -1,14 +1,13 @@
 package com.ubirch.client.protocol
 
 import java.util.UUID
-
 import com.ubirch.crypto.GeneratorKeyFactory
 import com.ubirch.crypto.utils.Curve
-import org.scalatest.FlatSpec
+import org.scalatest.flatspec.AnyFlatSpec
 
 import scala.util.Random
 
-class SignerTest extends FlatSpec {
+class SignerTest extends AnyFlatSpec {
   "DefaultProtocolSigner" should "work with EDDSA keys" in {
     val key = GeneratorKeyFactory.getPrivKey(Curve.Ed25519)
     val ps = new DefaultProtocolSigner(_ => Some(key))
