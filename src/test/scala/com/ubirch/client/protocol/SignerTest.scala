@@ -1,7 +1,6 @@
 package com.ubirch.client.protocol
 
 import java.util.UUID
-
 import com.ubirch.crypto.GeneratorKeyFactory
 import com.ubirch.crypto.utils.Curve
 import org.scalatest.flatspec.AnyFlatSpec

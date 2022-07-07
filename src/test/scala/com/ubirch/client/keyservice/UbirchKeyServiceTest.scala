@@ -1,9 +1,9 @@
 package com.ubirch.client.keyservice
 
-import java.util.UUID
-
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
+
+import java.util.UUID
 
 class UbirchKeyServiceTest extends AnyFlatSpec with Matchers {
   "HttpKeyService" should "fetch and properly deserialize public keys" ignore {

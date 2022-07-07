@@ -1,10 +1,10 @@
 package com.ubirch.client.keyservice
 
-import java.nio.file.Files
-import java.util.UUID
-
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
+
+import java.nio.file.Files
+import java.util.UUID
 
 class UnencryptedFileKeyProviderTest extends AnyFlatSpec with Matchers {
   "UnencryptedFileKeyService" should "get no public key if the underlying file is empty" in {
