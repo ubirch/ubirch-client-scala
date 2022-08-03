@@ -1,30 +1,46 @@
 package com.ubirch.client.protocol
 
-import java.security.{MessageDigest, SignatureException}
-import java.util.UUID
-
 import com.typesafe.scalalogging.StrictLogging
 import com.ubirch.client.keyservice.PublicKeyProvider
 import com.ubirch.client.util._
 import com.ubirch.crypto.PubKey
 import com.ubirch.protocol.ProtocolVerifier
+import com.ubirch.protocol.codec.MsgPackProtocolDecoder
 
+import java.security.{MessageDigest, SignatureException}
+import java.util
+import java.util.UUID
 import scala.util.Try
 
 class MultiKeyProtocolVerifier(keyService: PublicKeyProvider) extends ProtocolVerifier with StrictLogging {
 
-  def verifySingle(uuid: UUID, data: Array[Byte], offset: Int, len: Int, signature: Array[Byte],
-                   key: PubKey): Boolean = {
+  val msgPackProtocolDecoder = MsgPackProtocolDecoder.getDecoder
+  def verifySingle(
+    uuid: UUID,
+    data: Array[Byte],
+    offset: Int,
+    len: Int,
+    signature: Array[Byte],
+    key: PubKey): Boolean = {
     key.getPublicKey.getAlgorithm match {
       case "ECC_ED25519" | "Ed25519" =>
+
+      // hashedTrackleMsg has already hashed signed with SHA512; fallback to regular verification if needed
+      if(msgPackProtocolDecoder.isSignedOfHashedTrackleMsgType(data)) {
+          val payload = util.Arrays.copyOfRange(data, data.length - 64, data.length);
+          if (key.verify(payload, signature)) {
+            logger.debug(s"verifying ED25519: true ${hexEncode(payload)}")
+            return true
+          }
+        }
         // Ed25519 uses SHA512 hashed messages
-        val digest: MessageDigest = MessageDigest.getInstance("SHA-512")
+        val digest = MessageDigest.getInstance("SHA-512")
         digest.update(data, offset, len)
         val dataToVerify = digest.digest
-
         val ok = key.verify(dataToVerify, signature)
         logger.debug(s"verifying ED25519: $ok ${hexEncode(dataToVerify)}")
         ok
+
       case "ECC_ECDSA" | "ecdsa-p256v1" | "ECDSA" =>
         val dataToVerify = data.slice(offset, offset + len)
 
