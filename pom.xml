@@ -6,7 +6,7 @@
 
     <groupId>com.ubirch</groupId>
     <artifactId>ubirch-client-scala</artifactId>
-    <version>1.2.3-SNAPSHOT</version>
+    <version>1.2.4</version>
 
     <name>ubirch-client-scala [${project.version}]</name>
     <description>library for creating ubirch protocol clients in scala</description>
