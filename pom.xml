@@ -6,7 +6,7 @@
 
     <groupId>com.ubirch</groupId>
     <artifactId>ubirch-client-scala</artifactId>
-    <version>1.2.3-SNAPSHOT</version>
+    <version>1.2.4</version>
 
     <name>ubirch-client-scala [${project.version}]</name>
     <description>library for creating ubirch protocol clients in scala</description>
@@ -89,7 +89,7 @@
 
         <!-- ubirch -->
         <ubirch-crypto.version>2.1.4-SNAPSHOT</ubirch-crypto.version>
-        <ubirch-protocol-java.version>2.1.3-SNAPSHOT</ubirch-protocol-java.version>
+        <ubirch-protocol-java.version>2.1.5-SNAPSHOT</ubirch-protocol-java.version>
 
         <!-- Scala -->
         <scala-maven-plugin.version>3.4.2</scala-maven-plugin.version>
@@ -106,7 +106,7 @@
         <junit.jupiter.version>5.8.2</junit.jupiter.version>
         <junit.platform.version>1.2.0</junit.platform.version>
         <scalatest.version>3.2.12</scalatest.version>
-        <mockito.scala.version>1.4.6</mockito.scala.version>
+        <mockito-scala-scalatest_2.12.version>1.17.7</mockito-scala-scalatest_2.12.version>
 
         <!-- additional libraries -->
         <json4s-jackson.version>4.0.5</json4s-jackson.version>
@@ -155,6 +155,14 @@
             <version>${scalatest.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-scala-scalatest_2.12</artifactId>
+            <version>${mockito-scala-scalatest_2.12.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+
         <!-- endregion -->
 
         <dependency>
